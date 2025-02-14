@@ -3,6 +3,10 @@ import java.util.*;
 import java.util.stream.Collectors;
 
 public class ImageLikesManager {
+    	
+    //when users likes, this whole class just not be called
+    //these three method base on the likesMap but that file is never created and writen
+
 
     private final String likesFilePath = "data/likes.txt";
 

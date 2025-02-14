@@ -1,18 +1,11 @@
-import javax.swing.*;
-
-
+import java.awt.*;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.io.BufferedReader;
-import java.io.BufferedWriter;
 import java.io.IOException;
-import java.awt.*;
 import java.nio.file.*;
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.stream.Collectors;
 import java.util.stream.Stream;
+import javax.swing.*;
 
 
 
@@ -267,60 +260,21 @@ headerPanel.add(profileNameAndBioPanel);
     }
 
 
-   private void handleFollowAction(String usernameToFollow) {
-    Path followingFilePath = Paths.get("data", "following.txt");
-    Path usersFilePath = Paths.get("data", "users.txt");
-    String currentUserUsername = "";
-
-    try {
-        // Read the current user's username from users.txt
-        try (BufferedReader reader = Files.newBufferedReader(usersFilePath)) {
-            String line;
-            while ((line = reader.readLine()) != null) {
-                String[] parts = line.split(":");
-               currentUserUsername = parts[0];
-            }
-        }
-
-        System.out.println("Real user is "+currentUserUsername);
-        // If currentUserUsername is not empty, process following.txt
-        if (!currentUserUsername.isEmpty()) {
-            boolean found = false;
-            StringBuilder newContent = new StringBuilder();
-
-            // Read and process following.txt
-            if (Files.exists(followingFilePath)) {
-                try (BufferedReader reader = Files.newBufferedReader(followingFilePath)) {
-                    String line;
-                    while ((line = reader.readLine()) != null) {
-                        String[] parts = line.split(":");
-                        if (parts[0].trim().equals(currentUserUsername)) {
-                            found = true;
-                            if (!line.contains(usernameToFollow)) {
-                                line = line.concat(line.endsWith(":") ? "" : "; ").concat(usernameToFollow);
-                            }
-                        }
-                        newContent.append(line).append("\n");
-                    }
-                }
-            }
-
-            // If the current user was not found in following.txt, add them
-            if (!found) {
-                newContent.append(currentUserUsername).append(": ").append(usernameToFollow).append("\n");
-            }
-
-            // Write the updated content back to following.txt
-            try (BufferedWriter writer = Files.newBufferedWriter(followingFilePath)) {
-                writer.write(newContent.toString());
-            }
-        }
-    } catch (IOException e) {
-        e.printStackTrace();
-    }
-}
-
+    private void handleFollowAction(String usernameToFollow) {
+        try {
+            // If currentUserUsername is not empty, process following.txt
+            if (!currentUser.getUsername().isEmpty()) {
     
+                //when the buttom is called, use constrctor to store data.
+                FollowInfo info = new FollowInfo(currentUser.getUsername(),usernameToFollow);
+                UserRelationshipManager relation = new UserRelationshipManager();
+                relation.followUser(info.getFollower(),info.getFollowed());
+                relation.checkFollowers(relation.getFollowers(usernameToFollow), info.getFollowed());
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
 
     
     

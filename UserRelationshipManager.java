@@ -4,9 +4,12 @@ import java.util.List;
 
 public class UserRelationshipManager {
 
-    private final String followersFilePath = "data/followers.txt";
+    private final String followersFilePath = "data/following.txt";
 
-    // Method to follow a user
+    public UserRelationshipManager() {
+    }
+
+    // Method to follow a user, and record in followers.txt file
     public void followUser(String follower, String followed) throws IOException {
         if (!isAlreadyFollowing(follower, followed)) {
             try (BufferedWriter writer = new BufferedWriter(new FileWriter(followersFilePath, true))) {
@@ -44,18 +47,13 @@ public class UserRelationshipManager {
         return followers;
     }
 
-    // Method to get the list of users a user is following
-    public List<String> getFollowing(String username) throws IOException {
-        List<String> following = new ArrayList<>();
-        try (BufferedReader reader = new BufferedReader(new FileReader(followersFilePath))) {
-            String line;
-            while ((line = reader.readLine()) != null) {
-                String[] parts = line.split(":");
-                if (parts[0].equals(username)) {
-                    following.add(parts[1]);
-                }
+    public boolean  checkFollowers(List<String> followers, String username) throws IOException {
+        while(followers.iterator() != null){
+            if(!followers.iterator().equals(username)){
+                System.out.print("follow success");
+                return true;
             }
         }
-        return following;
+        return false;
     }
 }
